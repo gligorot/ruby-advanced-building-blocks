@@ -96,7 +96,36 @@ module Enumerable
     result # Although not visible in the results i THINK it returns an array
   end
 
+  def my_inject(*arg)
+    #2.send(:+.to_s,3) -- EXAMPLE
+    if block_given?
+      if arg.size == 0 #no initial given
+
+      elsif arg.size == 1 #initial given
+
+      end
+    else
+      ary = self.to_a
+      if arg.size == 1 #only sym given
+        #result =0/1 determinator
+        arg[0].to_s == "+" || arg[0].to_s == "-" ? result = 0 : result = 1
+
+        ary.each do |item|
+          result = result.send(arg[0], item)
+        end
+
+      elsif arg.size == 2 #initial, sym given
+        result = arg[0]
+        ary.each do |item|
+          result = result.send(arg[1], item)
+        end
+      end
+      result
+    end
+  end
+
 end
+#2.send(:+.to_s,3)
 
 #==============TESTS BELOW THIS LINE =============
 
@@ -147,3 +176,15 @@ puts array.my_count {|item| item%2 == 0}
 
 puts "---my map---"
 puts array.my_map {|item| item += 1 if item.is_a? Integer}
+
+puts "---my inject---"
+puts "--block given--"
+puts "-init given-"
+puts "-init not given-"
+puts "--block not given--"
+puts "-init not given-"
+puts (5..10).my_inject(:+)
+puts (5..10).my_inject(:*)
+puts "-init given-"
+puts (5..10).my_inject(10, :+)
+puts (5..10).my_inject(10, :*)
